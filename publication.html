@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Publicaciones</title>
+
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .cart {
+      margin-top: 20px;
+      padding: 10px;
+      border-top: 1px solid #ddd;
+    }
+    .total {
+      font-weight: bold;
+      text-align: right;
+    }
+    .book-card {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .book-card button {
+      background-color: #e5c299;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+    .book-card button:hover {
+      background-color: #e5c299;
+    }
+    #description {
+      display: none;
+      margin-top: 20px;
+      border: 1px solid #ddd;
+      padding: 10px;
+    }
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .cart-item button {
+      background-color: rgb(211, 173, 116);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #d8c5ae;">
+      <a class="navbar-brand" href="index.html" style="color: #141414;">Mónica Cazón</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="index.html" style="color: #ffffff;">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="biography.html" style="color: #ffffff;">Biografía</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="publication.html" style="color: #ffffff;">Publicaciones</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="awards.html" style="color: #ffffff;">Reconocimientos</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="contact.html" style="color: #ffffff;">Contacto</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="reseña.html" style="color: #ffffff;">Reseña</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section>
+      <h2>Publicaciones</h2>
+      <div id="product-list"></div>
+      <div id="description" style="display:none;">
+        <h3>Descripción</h3>
+        <p id="expanded-description"></p>
+        <button onclick="hideDescription()">Cerrar</button>
+      </div>
+
+      <div class="cart">
+        <h3>Carrito de Compras</h3>
+        <div id="cart-items"></div>
+        <p class="total">Total: $<span id="total-price">0</span></p>
+        <button onclick="clearCart()">Vaciar Carrito</button>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2024 Mónica Cazón</p>
+  </footer>
+
+  <script>
+    // Lista de productos
+    const products = [
+      { name: "Antología de Microficción", price: 500, description: "Una colección de microrelatos publicados por La Papa Ediciones." },
+      { name: "Las áreas de Brodman", price: 700, description: "Un libro de poesía publicado por Abra Pampa Ediciones." }
+    ];
+
+    // Función para generar la lista de productos
+    function generateProductList() {
+      const productList = document.getElementById("product-list");
+      products.forEach((product, index) => {
+        const productCard = document.createElement("div");
+        productCard.classList.add("book-card");
+
+        productCard.innerHTML = `
+          <h3>${product.name}</h3>
+          <p>Precio: $${product.price}</p>
+          <button onclick="showDescription(${index})">Ver más</button>
+          <button onclick="addToCart('${product.name}', ${product.price})">Comprar - $${product.price}</button>
+        `;
+
+        productList.appendChild(productCard);
+      });
+    }
+
+    // Mostrar descripción ampliada
+    function showDescription(index) {
+      const descriptionSection = document.getElementById("description");
+      const expandedDescription = document.getElementById("expanded-description");
+
+      expandedDescription.textContent = products[index].description;
+      descriptionSection.style.display = "block";
+    }
+
+    // Ocultar descripción ampliada
+    function hideDescription() {
+      const descriptionSection = document.getElementById("description");
+      descriptionSection.style.display = "none";
+    }
+
+    // Carrito de compras
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+    function addToCart(productName, price) {
+      // Verificar si el producto ya está en el carrito
+      const existingProduct = cart.find(item => item.name === productName);
+
+      if (existingProduct) {
+        existingProduct.quantity += 1; // Aumentar la cantidad
+      } else {
+        cart.push({ name: productName, price: price, quantity: 1 });
+      }
+
+      // Guardar el carrito en localStorage
+      localStorage.setItem("cart", JSON.stringify(cart));
+
+      renderCart();
+    }
+
+    function renderCart() {
+      const cartItemsContainer = document.getElementById("cart-items");
+      const totalPriceElement = document.getElementById("total-price");
+
+      cartItemsContainer.innerHTML = ""; // Limpiar carrito
+
+      let totalPrice = 0;
+
+      cart.forEach((item, index) => {
+        const cartItem = document.createElement("div");
+        cartItem.classList.add("cart-item");
+
+        cartItem.innerHTML = `
+          <p>${item.name} - $${item.price} x ${item.quantity}</p>
+          <button onclick="removeFromCart(${index})">Eliminar</button>
+          <button onclick="editQuantity(${index}, 1)">+</button>
+          <button onclick="editQuantity(${index}, -1)">-</button>
+        `;
+
+        cartItemsContainer.appendChild(cartItem);
+
+        totalPrice += item.price * item.quantity;
+      });
+
+      totalPriceElement.textContent = totalPrice;
+    }
+
+    function removeFromCart(index) {
+      cart.splice(index, 1); // Eliminar producto del carrito
+      localStorage.setItem("cart", JSON.stringify(cart)); 
+      renderCart();
+    }
+
+    function editQuantity(index, change) {
+      const item = cart[index];
+      if (item.quantity + change > 0) {
+        item.quantity += change;
+        localStorage.setItem("cart", JSON.stringify(cart)); 
+        renderCart();
+      }
+    }
+
+    function clearCart() {
+      cart = []; // Vaciar el carrito
+      localStorage.setItem("cart", JSON.stringify(cart)); 
+      renderCart();
+    }
+
+    // Inicializar la lista de productos y el carrito al cargar la página
+    window.onload = function() {
+      generateProductList();
+      renderCart();
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Contacto </title>
+  
+    
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css"> 
+  </head>
+  
+<body>
+  <header>
+    <nav class="navbar navbar-expand-lg navbar-light" style="background-color: 
+    #d8c5ae;">
+      <a class="navbar-brand" href="index.html" style="color: #141414;">Mónica Cazón</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="index.html" style="color: #ffffff;">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="biography.html" style="color: #ffffff;">Biografía</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="publication.html" style="color: #ffffff;">Publicaciones</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="awards.html" style="color: #ffffff;">Reconocimientos</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="contact.html" style="color: #ffffff;">Contacto</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="reseña.html" style="color: #ffffff;">Reseña</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </header>
+  <main>
+    <section>
+      <h2>Contacto</h2>
+      <section class="contact-form">
+        <form id="contact-form">
+          <label for="name">Nombre:</label>
+          <input type="text" id="name" name="nombre">
+        
+          <label for="email">Email:</label>
+          <input type="email" id="email" name="email">
+        
+          <label for="message">Mensaje:</label>
+          <textarea id="message" name="mensaje"></textarea>
+        
+          <button type="submit">Enviar</button>
+        </form>
+        
+        <!-- Contenedor de mensajes de error o éxito -->
+        <div id="error-message"></div>
+      </section>
+    </section>
+  </main>  
+  <footer>
+    <p>&copy; 2024 Mónica Cazón</p>
+  </footer>
+
+  <script>
+    
+    function validateForm(event) {
+      event.preventDefault(); // Evitar que el formulario se envíe de forma predeterminada
+
+      const nombre = document.querySelector("input[name='nombre']").value.trim();
+      const email = document.querySelector("input[name='email']").value.trim();
+      const mensaje = document.querySelector("textarea[name='mensaje']").value.trim();
+      const errorMessageDiv = document.getElementById("error-message"); 
+
+      // Verificar si los campos están vacíos
+      if (!nombre || !email || !mensaje) {
+        errorMessageDiv.textContent = "Por favor, completa todos los campos del formulario.";
+      } else {
+        errorMessageDiv.textContent = "Formulario completado correctamente.";
+      
+      }
+    }
+
+    // Asegurarme de que el script se ejecute cuando el documento esté completamente cargado
+    window.onload = function() {
+      // Añadir un evento al formulario
+      const form = document.getElementById("contact-form");
+      form.addEventListener("submit", validateForm);
+    };
+  </script>
+</body>
+</html>
